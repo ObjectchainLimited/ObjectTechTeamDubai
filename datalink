@@ -1,0 +1,48 @@
+imported System.Data.dll from Unity\Editor\Data\Mono\lib\mono\2.0. I am using the following code:
+
+ using UnityEngine;
+ using System.Collections;
+ using System.Data.Sql;
+ using System.Data.SqlClient;
+
+ public class SQL_Controller : MonoBehaviour {
+
+     string conString = "Server=myaddress.com,port;" +
+             "Database=databasename;" +
+             "User ID=username;" +
+             "Password=password;";
+
+     public string GetStringFromSQL()
+     {
+         LoadConfig();
+         string result = "";
+
+         SqlConnection connection = new SqlConnection(conString);
+         connection.Open();
+         Debug.Log(connection.State);
+         SqlCommand Command = connection.CreateCommand();
+         Command.CommandText = "select * from Artykuly2";
+         SqlDataReader ThisReader = Command.ExecuteReader();
+         while (ThisReader.Read())
+         {
+             result = ThisReader.GetString(0);
+         }
+         ThisReader.Close();
+         connection.Close();
+
+         return result;
+     }
+ }
+This is the error I get:
+
+IOException: Connection lost
+Mono.Data.Tds.Protocol.TdsComm.GetPhysicalPacketHeader ()
+Mono.Data.Tds.Protocol.TdsComm.GetPhysicalPacket ()
+Mono.Data.Tds.Protocol.TdsComm.GetByte ()
+Mono.Data.Tds.Protocol.Tds.ProcessSubPacket ()
+Mono.Data.Tds.Protocol.Tds.NextResult ()
+Mono.Data.Tds.Protocol.Tds.SkipToEnd ()
+Rethrow as TdsInternalException: Server closed the connection.
+Mono.Data.Tds.Protocol.Tds.SkipToEnd ()
+Mono.Data.Tds.Protocol.Tds70.Connect (Mono.Data.Tds.Protocol.TdsConnectionParameters connectionParameters)
+Mono.Data.Tds.Protocol.Tds80.Connect (Mono.Data.Tds.Protocol.TdsConnectionParameters connectionParameters)
